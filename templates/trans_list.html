@@ -22,6 +22,7 @@
         <div class="col-md-9">
             <h4>Transaction List</h4>
             <h6>Total count: <b>{{count}}</b></h6>
+            <h6>Total sum: <b> {% if sum %}{{sum}}{%else%} 0 {% endif %}</b></h6>
             <table class="table table-striped">
                 <thead>
                     <tr>

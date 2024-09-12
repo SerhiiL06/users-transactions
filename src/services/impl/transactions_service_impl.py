@@ -17,5 +17,9 @@ class TransactionServiceImpl(TransactionService):
 
         return await self.repo.create({"user_id": user_id, "amount": amount}, session)
 
-    async def get_transactions_list(self, filtered: dict, session: AsyncSession):
-        return await self.repo.find_all(session, filtered)
+    async def get_transactions_list(
+        self, filtered: dict, session: AsyncSession
+    ) -> list:
+        transaction_list = await self.repo.find_all(session, filtered)
+        statistic = await self.repo.statistic_transaction(filtered, session)
+        return [transaction_list, statistic]

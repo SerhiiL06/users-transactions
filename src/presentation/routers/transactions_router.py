@@ -44,9 +44,14 @@ async def fetch_transactions(
     session: Annotated[AsyncSession, Depends(core.session_transaction)],
     service: Annotated[TransactionServiceImpl, Depends()],
 ):
-    trans_list = await service.get_transactions_list(request.query_params, session)
-    return templates.TemplateResponse(
-        request,
-        "trans_list.html",
-        {"object_list": trans_list, "count": len(trans_list)},
+    trans_list, statistic_data = await service.get_transactions_list(
+        request.query_params, session
     )
+
+    context = {
+        "object_list": trans_list,
+        "count": statistic_data.get("count"),
+        "sum": statistic_data.get("sum"),
+    }
+
+    return templates.TemplateResponse(request, "trans_list.html", context)

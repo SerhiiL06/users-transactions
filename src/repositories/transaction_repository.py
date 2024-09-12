@@ -1,4 +1,4 @@
-from sqlalchemy import insert, select
+from sqlalchemy import insert, select, func, Select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload, selectinload
 
@@ -22,20 +22,14 @@ class TransactionRepository(AbstractRepository):
         await session.commit()
         return result.scalar()
 
-    async def find_all(self, session: AsyncSession, filted_data: dict = None):
+    async def find_all(self, session: AsyncSession, filter_data: dict = None):
         q = (
             select(Transaction)
             .options(joinedload(Transaction.user).load_only(User.nickname))
             .order_by(Transaction.created_at.desc())
         )
 
-        start_date = filted_data.get("start_date")
-        end_date = filted_data.get("end_date")
-
-        if start_date:
-            q = q.where(Transaction.created_at >= start_date)
-        if end_date:
-            q = q.where(Transaction.created_at <= end_date)
+        q = self.filter_query(q, filter_data)
 
         result = await session.execute(q)
         return result.scalars().all()
@@ -50,6 +44,26 @@ class TransactionRepository(AbstractRepository):
         result = await session.execute(q)
 
         return result.scalars().one_or_none()
+
+    async def statistic_transaction(self, filter_data: dict, session: AsyncSession):
+
+        q = select(func.sum(Transaction.amount), func.count(Transaction.id))
+
+        q = self.filter_query(q, filter_data)
+
+        result = await session.execute(q)
+        return result.mappings().one()
+
+    @classmethod
+    def filter_query(cls, query: Select, filter_data: dict) -> Select:
+        start_date = filter_data.get("start_date")
+        end_date = filter_data.get("end_date")
+
+        if start_date:
+            query = query.where(Transaction.created_at >= start_date)
+        if end_date:
+            query = query.where(Transaction.created_at <= end_date)
+        return query
 
     def update(self, *args, **kwargs):
         raise NotImplemented()
