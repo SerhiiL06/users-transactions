@@ -1,4 +1,4 @@
-from sqlalchemy import insert, select, func, Select
+from sqlalchemy import Select, func, insert, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload, selectinload
 
@@ -27,7 +27,12 @@ class TransactionRepository(AbstractRepository):
             select(Transaction)
             .options(joinedload(Transaction.user).load_only(User.nickname))
             .order_by(Transaction.created_at.desc())
-        )
+        ).limit(5)
+
+        page_number = filter_data.get("page")
+
+        if page_number:
+            q = q.offset((int(page_number) - 1) * 5)
 
         q = self.filter_query(q, filter_data)
 

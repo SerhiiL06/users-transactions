@@ -52,6 +52,8 @@ async def fetch_transactions(
         "object_list": trans_list,
         "count": statistic_data.get("count"),
         "sum": statistic_data.get("sum"),
+        "total_pages": statistic_data.get("count") / 5,
+        "current_page": int(request.query_params.get("page", 0)),
     }
 
     return templates.TemplateResponse(request, "trans_list.html", context)

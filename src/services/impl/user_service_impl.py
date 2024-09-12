@@ -1,6 +1,5 @@
 from typing import Optional
 
-
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.database.models import User
