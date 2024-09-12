@@ -1,0 +1,5 @@
+.venv
+.env
+Pipfile
+Pipfile.lock
+*.sqlite3
