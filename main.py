@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-from src.presentation.routers.users_router import users_router
+
 from src.presentation.routers.transactions_router import transactions_router
+from src.presentation.routers.users_router import users_router
 
 
 def application():

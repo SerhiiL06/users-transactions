@@ -1,10 +1,11 @@
+from typing import Optional
+
+
 from sqlalchemy.ext.asyncio import AsyncSession
+
+from core.database.models import User
 from src.repositories.user_repository import UserRepository
 from src.services.user_service import UserService
-from core.database.models import User
-from typing import Optional
-from fastapi.exceptions import ValidationException, RequestValidationError
-from fastapi import HTTPException
 
 
 class UserServiceImpl(UserService):
@@ -18,6 +19,9 @@ class UserServiceImpl(UserService):
     ) -> int:
 
         validated_data = self.validate_user_data(user_data)
+
+        if validated_data.get("errors"):
+            return validated_data
         user_id = await self.repo.create(validated_data, session)
         return user_id
 
@@ -33,13 +37,15 @@ class UserServiceImpl(UserService):
         await self.repo.delete(user_id, session)
 
     async def update_user(self, user_id: int, data: dict, session: AsyncSession):
-        validate_data = self.validate_user_data(data)
-        return await self.repo.update(user_id, validate_data, session)
+        validated_data = self.validate_user_data(data)
+
+        if validated_data.get("errors"):
+            return validated_data
+
+        return await self.repo.update(user_id, validated_data, session)
 
     @staticmethod
     def validate_user_data(data: dict):
-        nickname = data.get("nickname")
-
-        if len(nickname) > 50:
-            raise HTTPException()
+        if len(data.get("nickname")) > 50:
+            return {"errors": "length of nickname must be less than 50"}
         return data

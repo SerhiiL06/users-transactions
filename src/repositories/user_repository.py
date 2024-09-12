@@ -1,12 +1,12 @@
-from typing import Optional, Union
+from typing import Optional
 
-from sqlalchemy import insert, select, delete, update
-from sqlalchemy.orm import selectinload, joinedload
+from sqlalchemy import delete, insert, select, update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.repositories.abstract import AbstractRepository
+from sqlalchemy.orm import joinedload, selectinload
 
 from core.database.models import User
+from src.repositories.abstract import AbstractRepository
 
 
 class UserRepository(AbstractRepository):

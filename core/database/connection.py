@@ -1,10 +1,10 @@
 from collections.abc import AsyncGenerator
 from typing import Optional
+
 from sqlalchemy.engine import URL
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from core.settings import settings
-from contextlib import asynccontextmanager
 
 
 class DatabaseCORE:
@@ -18,22 +18,22 @@ class DatabaseCORE:
         port: Optional[int] = None,
         drivername: str = "sqlite+aiosqlite",
     ) -> None:
-        self._DB_NAME = db_name
-        self._DB_USERNAME = username
-        self._DB_PASSWORD = password
-        self._DB_HOST = host
-        self._DB_PORT = port
-        self.driver = drivername
+        self._db_name = db_name
+        self._db_user = username
+        self._db_password = password
+        self._db_host = host
+        self._db_port = port
+        self._driver = drivername
 
     @property
     def _db_url(self):
         url = URL.create(
-            drivername=self.driver,
-            username=self._DB_USERNAME,
-            password=self._DB_PASSWORD,
-            host=self._DB_HOST,
-            port=self._DB_PORT,
-            database=self._DB_NAME,
+            drivername=self._driver,
+            username=self._db_user,
+            password=self._db_password,
+            host=self._db_host,
+            port=self._db_port,
+            database=self._db_name,
         )
         return url
 

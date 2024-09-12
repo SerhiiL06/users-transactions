@@ -1,10 +1,12 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import APIRouter, Depends, Request
-from src.services.impl.transactions_service_impl import TransactionServiceImpl
 from typing import Annotated
-from core.database.connection import core
-from fastapi.templating import Jinja2Templates
+
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse
+from fastapi.templating import Jinja2Templates
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from core.database.connection import core
+from src.services.impl.transactions_service_impl import TransactionServiceImpl
 
 transactions_router = APIRouter(tags=["transactions"])
 
@@ -25,10 +27,15 @@ async def create_trans(
 
     form_data = await request.form()
 
-    await service.create_transaction(
-        form_data.get("user_id"), form_data.get("amount"), session
+    result = await service.create_transaction(
+        form_data.get("user_id"), int(form_data.get("amount")), session
     )
-    return RedirectResponse("/users/", 204)
+    if isinstance(result, dict) and result.get("errors"):
+        return templates.TemplateResponse(
+            request, "create-transaction.html", {"errors": result.get("errors")}
+        )
+
+    return RedirectResponse("/users/", 301)
 
 
 @transactions_router.get("/transaction/list/")

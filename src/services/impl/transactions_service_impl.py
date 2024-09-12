@@ -1,13 +1,7 @@
-from src.services.transactions_service import TransactionService
-from typing import Optional, Union
-
-from sqlalchemy import insert, select, delete, update
-from sqlalchemy.orm import selectinload, joinedload
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.repositories.transaction_repository import TransactionRepository
 
-from core.database.models import Transaction, User
+from src.repositories.transaction_repository import TransactionRepository
+from src.services.transactions_service import TransactionService
 
 
 class TransactionServiceImpl(TransactionService):
@@ -18,6 +12,8 @@ class TransactionServiceImpl(TransactionService):
     async def create_transaction(
         self, user_id: int, amount: int, session: AsyncSession
     ):
+        if int(amount) < 1:
+            return {"errors": "The amount must be greaten than zero"}
 
         return await self.repo.create({"user_id": user_id, "amount": amount}, session)
 

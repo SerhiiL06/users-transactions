@@ -3,6 +3,14 @@
 
 {% block content %}
 
+
+    {% if errors %}
+    <div class="alert alert-danger" role="alert">
+        {{ errors }}
+    </div>
+    {% endif %}
+
+
     <div class="container mt-5">
         <h2 class="text-center mb-4">Create transaction form</h2>
         <form action method='POST'>

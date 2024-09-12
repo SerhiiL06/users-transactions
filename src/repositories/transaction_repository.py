@@ -1,23 +1,21 @@
-from src.repositories.abstract import AbstractRepository
-
 from sqlalchemy import insert, select
-from sqlalchemy.orm import selectinload, joinedload
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import joinedload, selectinload
+
 from core.database.models import Transaction, User
-from typing import Optional
+from src.repositories.abstract import AbstractRepository
 
 
 class TransactionRepository(AbstractRepository):
 
     async def create(self, data: dict, session: AsyncSession) -> int:
 
-        check_user = await session.execute(
-            select(User).where(User.id == data.get("user_id"))
-        )
+        user_id = data.get("user_id")
+
+        check_user = await session.execute(select(User).where(User.id == user_id))
 
         if check_user.scalars().one_or_none() is None:
-            return
+            return {"errors": f"user with id {user_id} doesnt exists"}
 
         q = insert(Transaction).values(data).returning(Transaction.id)
         result = await session.execute(q)

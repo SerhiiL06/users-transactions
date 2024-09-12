@@ -1,11 +1,12 @@
-from dataclasses import asdict
-from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import APIRouter, Depends, Request
-from src.services.impl.user_service_impl import UserServiceImpl
 from typing import Annotated
-from core.database.connection import core
-from fastapi.templating import Jinja2Templates
+
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse
+from fastapi.templating import Jinja2Templates
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from core.database.connection import core
+from src.services.impl.user_service_impl import UserServiceImpl
 
 users_router = APIRouter(tags=["users"], prefix="/users")
 
