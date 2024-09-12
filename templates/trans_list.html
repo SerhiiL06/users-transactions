@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-3">
+            <h4>Filter Transactions</h4>
+            <form method="GET" action="">
+                <div class="mb-3">
+                    <label for="start_date" class="form-label">Start Date</label>
+                    <input type="date" class="form-control" id="start_date" name="start_date">
+                </div>
+                <div class="mb-3">
+                    <label for="end_date" class="form-label">End Date</label>
+                    <input type="date" class="form-control" id="end_date" name="end_date">
+                </div>
+                <button type="submit" class="btn btn-primary">Filter</button>
+            </form>
+        </div>
+
+
+        <div class="col-md-9">
+            <h4>Transaction List</h4>
+            <h6>Total count: <b>{{count}}</b></h6>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">User</th>
+                        <th scope="col">Amount</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in object_list %}
+                    <tr>
+                        <td>{{ transaction.id }}</td>
+                        <td>{{ transaction.user }}</td>
+                        <td>{{ transaction.amount }}</td>
+                        <td>{{ transaction.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>{{ transaction.description }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}

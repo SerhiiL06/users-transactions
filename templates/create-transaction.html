@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+    <div class="container mt-5">
+        <h2 class="text-center mb-4">Create transaction form</h2>
+        <form action method='POST'>
+            <div class="mb-3">
+                <label for="user_id" class="form-label">user_id</label>
+                <input type="text" class="form-control" id="user_id" name='user_id' placeholder="Enter the user id value" required>
+            </div>
+                  <div class="mb-3">
+                <label for="amount" class="form-label">amount</label>
+                <input type="text" class="form-control" id="amount" name='amount' placeholder="Enter the amount value" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+
+
+
+{% endblock content %}

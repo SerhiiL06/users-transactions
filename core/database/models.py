@@ -18,14 +18,6 @@ class User(Base):
     __tablename__ = "users"
 
     nickname: Mapped[str] = mapped_column(String(20), unique=True, index=True)
-    email: Mapped[str] = mapped_column(String(320), unique=True)
-
-    hashed_password: Mapped[str]
-
-    verificate: Mapped[bool] = mapped_column(default=False)
-    is_active: Mapped[bool] = mapped_column(default=True)
-
-    joined_at: Mapped[datetime] = mapped_column(default=datetime.now())
     transactions = relationship("Transaction", back_populates="user")
 
     def __repr__(self) -> str:
@@ -37,6 +29,9 @@ class Transaction(Base):
 
     amount: Mapped[int]
     created_at: Mapped[datetime] = mapped_column(default=datetime.now())
+    transaction_type: Mapped[str] = mapped_column(
+        String(50), default="simple", nullable=True
+    )
 
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"))
 

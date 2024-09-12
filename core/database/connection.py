@@ -4,6 +4,7 @@ from sqlalchemy.engine import URL
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from core.settings import settings
+from contextlib import asynccontextmanager
 
 
 class DatabaseCORE:
@@ -45,7 +46,7 @@ class DatabaseCORE:
         return async_sessionmaker(self._engine, class_=AsyncSession, autoflush=False)
 
     async def session_transaction(self) -> AsyncGenerator:
-        async with self.session_factory.begin() as conn:
+        async with self.session_factory() as conn:
             yield conn
 
 

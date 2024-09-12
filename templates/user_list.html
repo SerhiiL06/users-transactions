@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>User List</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Nickname</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td><a href="/users/{{user.id}}/"><b>{{ user.nickname }}</b></a></td>
+                <td>
+                    <!-- Кнопка для оновлення -->
+                    <a href="/users/{{ user.id }}/update" class="btn btn-warning">Update</a>
+
+                    <!-- Кнопка для видалення -->
+                    <form action="/users/{{ user.id }}/delete" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}
